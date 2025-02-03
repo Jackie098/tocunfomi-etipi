@@ -1,0 +1,62 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["strictUndefinedChecks"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DATABASE_DIRECT_URL")
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  description TeamType
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  User User[]
+}
+
+model User {
+  id         String @id @default(cuid())
+  discord_id String @unique
+  name       String
+  email      String @unique
+
+  avatar_url String?
+
+  is_validated       Boolean @default(false)
+  is_email_validated Boolean @default(false)
+
+  team_id String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  team Team @relation(fields: [team_id], references: [id])
+
+  lunch_time LunchTime[]
+}
+
+model LunchTime {
+  id String @id @default(cuid())
+
+  go_lunch     Boolean   @default(true)
+  date_leaving DateTime?
+  date_arrived DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user_id String
+
+  use User @relation(fields: [user_id], references: [id])
+}
+
+enum TeamType {
+  DEV
+  DESIGN
+  REQUIREMENT
+}
