@@ -1,10 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { signOut, useSession } from "next-auth/react";
+import { GetServerSideProps } from "next";
+import { getServerSession, Session } from "next-auth";
+import { signOut } from "next-auth/react";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { prisma } from "../api/_config/db";
+import { User } from "@/models/User";
 
-export default function Home() {
-  const { data: session, status } = useSession();
+type Props = {
+  session: Session;
+  user: User;
+};
 
-  console.log("🚀 ~ LoginPage ~ session, status:", session, status);
+export default function Home({ session, user }: Props) {
+  console.log(
+    "🚀 ~ LoginPage ~ session, status:",
+    session,
+    session.user?.email
+  );
+
+  if (!user!.team_id) {
+    return <div>Você não tem uma equipe</div>;
+  }
 
   return (
     <>
@@ -15,3 +31,33 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  console.log(
+    "🚀 ~ constgetServerSideProps:GetServerSideProps= ~ session:",
+    session
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user!.email!,
+    },
+  });
+
+  return {
+    props: {
+      session,
+      user,
+    },
+  };
+};

@@ -5,10 +5,10 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <SessionProvider>
+    <SessionProvider /* session={pageProps?.session} */>
       <ThemeProvider
         attribute="class"
-        // defaultTheme="system"
+        // defaultTheme="dark"
         enableSystem
         // disableTransitionOnChange
       >
