@@ -20,22 +20,22 @@ model Team {
 }
 
 model User {
-  id         String @id @default(cuid())
-  discord_id String @unique
-  name       String
-  email      String @unique
+  id               String  @id @default(cuid())
+  discord_id       String  @unique
+  discord_nickname String  @unique
+  name             String?
+  email            String  @unique
 
   avatar_url String?
 
   is_validated       Boolean @default(false)
   is_email_validated Boolean @default(false)
 
-  team_id String
-
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  team Team @relation(fields: [team_id], references: [id])
+  team    Team?   @relation(fields: [team_id], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  team_id String?
 
   lunch_time LunchTime[]
 }
