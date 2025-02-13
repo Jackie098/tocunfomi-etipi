@@ -112,4 +112,26 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user!.email!,
+    },
+  });
+
+  return {
+    props: {
+      session,
+      user,
+    },
+  };
+};
