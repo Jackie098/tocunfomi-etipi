@@ -57,7 +57,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       session,
-      user,
+      user: {
+        ...user,
+        created_at: JSON.stringify(user?.created_at),
+        updated_at: JSON.stringify(user?.updated_at),
+      },
     },
   };
 };

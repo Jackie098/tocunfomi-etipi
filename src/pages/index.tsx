@@ -29,10 +29,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   });
 
+  console.log("🚀 ~ constgetServerSideProps:GetServerSideProps= ~ user:", user);
+
+  if (!user) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
   return {
-    props: {
-      session,
-      user,
+    redirect: {
+      destination: "/home",
+      permanent: false,
     },
   };
 };
