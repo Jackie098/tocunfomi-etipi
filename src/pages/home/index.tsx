@@ -5,6 +5,7 @@ import { signOut } from "next-auth/react";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { prisma } from "../api/_config/db";
 import { User } from "@/models/User";
+import { FormFirstAccess } from "@/components/pages/home/form-first-access";
 
 type Props = {
   session: Session;
@@ -19,7 +20,16 @@ export default function Home({ session, user }: Props) {
   );
 
   if (!user!.team_id) {
-    return <div>Você não tem uma equipe</div>;
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col w-[400px]">
+          <FormFirstAccess />
+        </div>
+        <Button onClick={() => signOut({ callbackUrl: "/login" })}>
+          Deslogar
+        </Button>
+      </div>
+    );
   }
 
   return (

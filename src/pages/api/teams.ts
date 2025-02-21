@@ -2,14 +2,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
+import { prisma } from "./_config/db";
+import { Team } from "@/models/Team";
 
-type Data = {
-  name: string;
-};
+type Response =
+  | Team[]
+  | {
+      name: string;
+    };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<Response>
 ) {
   const session = await getServerSession(req, res, authOptions);
 
@@ -18,7 +22,11 @@ export default async function handler(
     return;
   }
 
-  return res.json({
-    name: "Success",
-  });
+  if (req.method === "GET") {
+    const teams = await prisma.team.findMany();
+
+    res.status(200).json(teams as Team[]);
+  }
+
+  return res.status(405);
 }
