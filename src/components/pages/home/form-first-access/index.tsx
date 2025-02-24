@@ -66,6 +66,21 @@ export function FormFirstAccess() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    fetch("/api/users", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (

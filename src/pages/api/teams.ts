@@ -5,7 +5,7 @@ import { authOptions } from "./auth/[...nextauth]";
 import { prisma } from "./_config/db";
 import { Team } from "@/models/Team";
 
-type Response =
+export type Response =
   | Team[]
   | {
       name: string;
