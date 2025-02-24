@@ -6,6 +6,7 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { prisma } from "../api/_config/db";
 import { User } from "@/models/User";
 import { FormFirstAccess } from "@/components/pages/home/form-first-access";
+import { useEffect } from "react";
 
 type Props = {
   session: Session;
@@ -19,6 +20,10 @@ export default function Home({ session, user }: Props) {
     session.user?.email
   );
 
+  useEffect(() => {
+    console.log("🚀 ~ Home ~ user:", user);
+  }, []);
+
   if (!user!.team_id) {
     return (
       <div className="flex flex-col items-center justify-center">
@@ -31,6 +36,9 @@ export default function Home({ session, user }: Props) {
       </div>
     );
   }
+
+  // TODO: Verificação para mostrar Dialog se o usuário não tiver marcado o almoço hoje
+  // if()
 
   return (
     <>
