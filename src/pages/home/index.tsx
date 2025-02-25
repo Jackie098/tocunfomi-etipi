@@ -1,11 +1,12 @@
+import { FormFirstAccess } from "@/components/pages/home/form-first-access";
 import { Button } from "@/components/ui/button";
+import { User } from "@/models/User";
 import { GetServerSideProps } from "next";
 import { getServerSession, Session } from "next-auth";
 import { signOut } from "next-auth/react";
-import { authOptions } from "../api/auth/[...nextauth]";
+import { useEffect, useState } from "react";
 import { prisma } from "../api/_config/db";
-import { User } from "@/models/User";
-import { FormFirstAccess } from "@/components/pages/home/form-first-access";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 type Props = {
   session: Session;
@@ -13,11 +14,30 @@ type Props = {
 };
 
 export default function Home({ session, user }: Props) {
+  const [allLunchMarkedToday, setAllLunchMarkedToday] = useState<[]>([]);
+
+  const hasMarksToday = allLunchMarkedToday.length > 0;
+
   console.log(
     "🚀 ~ LoginPage ~ session, status:",
     session,
     session.user?.email
   );
+
+  useEffect(() => {
+    console.log("🚀 ~ Home ~ user:", user);
+    fetch("/api/lunch-time/today")
+      .then((res) => {
+        console.log("🚀 ~ Home ~ res:", res);
+        return res.json();
+      })
+      .then((data) => {
+        console.log("🚀 ~ Home ~ data:", data);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        setAllLunchMarkedToday(data || []);
+      });
+  }, []);
 
   if (!user!.team_id) {
     return (
@@ -30,6 +50,11 @@ export default function Home({ session, user }: Props) {
         </Button>
       </div>
     );
+  }
+
+  // TODO: Verificação para mostrar Dialog se o usuário não tiver marcado o almoço hoje
+  if (!hasMarksToday) {
+    return <div>User does not marked lunch</div>;
   }
 
   return (
