@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { prisma } from "../api/_config/db";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { LunchTimeWithUser } from "@/models/LunchTime";
+import { DialogLunchToday } from "@/components/pages/home/dialog-lunch-today";
 
 type Props = {
   session: Session;
@@ -20,6 +21,8 @@ export default function Home({ session, user }: Props) {
   >([]);
 
   const hasUserTeam = Boolean(user?.team_id);
+  const currentUserHasMarkedToday = allLunchMarkedToday.some(
+    (lunch) => lunch.user.email === session.user?.email
   );
 
   useEffect(() => {
