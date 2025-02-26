@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { prisma } from "../api/_config/db";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { LunchTimeWithUser } from "@/models/LunchTime";
 
 type Props = {
   session: Session;
@@ -14,14 +15,11 @@ type Props = {
 };
 
 export default function Home({ session, user }: Props) {
-  const [allLunchMarkedToday, setAllLunchMarkedToday] = useState<[]>([]);
+  const [allLunchMarkedToday, setAllLunchMarkedToday] = useState<
+    LunchTimeWithUser[]
+  >([]);
 
-  const hasMarksToday = allLunchMarkedToday.length > 0;
-
-  console.log(
-    "🚀 ~ LoginPage ~ session, status:",
-    session,
-    session.user?.email
+  const hasUserTeam = Boolean(user?.team_id);
   );
 
   useEffect(() => {
@@ -39,7 +37,14 @@ export default function Home({ session, user }: Props) {
       });
   }, []);
 
-  if (!user!.team_id) {
+  // FIXME: Return to page error
+  if (!session.user?.email || !user) {
+    return;
+  }
+
+  console.log("🚀 ~ LoginPage ~ session, status:", session, session.user.email);
+
+  if (!hasUserTeam) {
     return (
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col w-[400px]">
@@ -52,9 +57,8 @@ export default function Home({ session, user }: Props) {
     );
   }
 
-  // TODO: Verificação para mostrar Dialog se o usuário não tiver marcado o almoço hoje
-  if (!hasMarksToday) {
-    return <div>User does not marked lunch</div>;
+  if (!currentUserHasMarkedToday) {
+    return <DialogLunchToday userId={user.id} />;
   }
 
   return (
@@ -74,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     session
   );
 
-  if (!session) {
+  if (!session || !session.user?.email) {
     return {
       redirect: {
         destination: "/login",
@@ -85,9 +89,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const user = await prisma.user.findUnique({
     where: {
-      email: session.user!.email!,
+      email: session.user.email,
     },
   });
+
+  // FIXME: Return to page error
+  if (!user) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {

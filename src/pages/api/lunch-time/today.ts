@@ -1,17 +1,18 @@
+import { GenericResponseBody } from "@/models/GenericResponseBody";
+import { endOfDay, startOfDay } from "date-fns";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { prisma } from "../_config/db";
 import { authOptions } from "../auth/[...nextauth]";
-import { endOfDay, startOfDay } from "date-fns";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<GenericResponseBody>
 ) {
   const session = await getServerSession(req, res, authOptions);
 
   if (!session) {
-    res.status(401).json({ name: "You must be logged in." });
+    res.status(401).json({ data: "You must be logged in." });
     return;
   }
 
@@ -24,16 +25,7 @@ export default async function handler(
       include: {
         user: {
           include: {
-            team: {
-              omit: {
-                updated_at: true,
-                created_at: true,
-              },
-            },
-          },
-          omit: {
-            is_email_validated: true,
-            discord_id: true,
+            team: true,
           },
         },
       },
@@ -43,13 +35,9 @@ export default async function handler(
           lte: endOfDay(endDay),
         },
       },
-      omit: {
-        user_id: true,
-      },
     });
 
-    res.status(200).json(allMarkedLunches);
-    return;
+    return res.status(200).json({ data: allMarkedLunches });
   }
 
   if (req.method === "POST") {
