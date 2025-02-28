@@ -1,3 +1,4 @@
+// FIXME: Add mapper camelCase forEach attr in snake_case
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["strictUndefinedChecks"]
