@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { prisma } from "../_config/db";
-import { Team } from "@/models/Team";
+import { Team } from "@/models/team";
 
 export type Response =
   | Team[]

@@ -1,4 +1,4 @@
-import { Team, TeamType } from "@/models/Team";
+import { Team, TeamType } from "@/models/team";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 

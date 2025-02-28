@@ -1,13 +1,13 @@
 import { FormFirstAccess } from "@/components/pages/home/form-first-access";
 import { Button } from "@/components/ui/button";
-import { User } from "@/models/User";
+import { User } from "@/models/user";
 import { GetServerSideProps } from "next";
 import { getServerSession, Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { prisma } from "../api/_config/db";
 import { authOptions } from "../api/auth/[...nextauth]";
-import { LunchTimeWithUser } from "@/models/LunchTime";
+import { LunchTimeWithUser } from "@/models/lunch-time";
 import { DialogLunchToday } from "@/components/pages/home/dialog-lunch-today";
 
 type Props = {

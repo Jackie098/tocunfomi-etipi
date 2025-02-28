@@ -1,4 +1,4 @@
-import { GenericResponseBody } from "@/models/GenericResponseBody";
+import { GenericResponseBody } from "@/models/generic-response-body";
 import { endOfDay, startOfDay } from "date-fns";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";

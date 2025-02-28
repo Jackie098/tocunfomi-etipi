@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Team } from "@/models/Team";
+import { Team } from "@/models/team";
 import { useEffect, useState } from "react";
 import { parseTeamDescriptionToPortuguese } from "@/lib/utils";
 
