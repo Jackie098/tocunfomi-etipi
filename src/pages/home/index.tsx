@@ -36,11 +36,11 @@ export default function Home({ session, user }: Props) {
         console.log("🚀 ~ Home ~ data:", data);
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        setAllLunchMarkedToday(data || []);
+        setAllLunchMarkedToday(data.data || []);
       });
   }, []);
 
-  // FIXME: Return to page error
+  // FIXME: Redirect to page error
   if (!session.user?.email || !user) {
     return;
   }
@@ -60,16 +60,13 @@ export default function Home({ session, user }: Props) {
     );
   }
 
-  if (!currentUserHasMarkedToday) {
-    return <DialogLunchToday userId={user.id} />;
-  }
-
   return (
     <>
       <div>Home</div>;
       <Button onClick={() => signOut({ callbackUrl: "/login" })}>
         Deslogar
       </Button>
+      <DialogLunchToday userId={user.id} open={!currentUserHasMarkedToday} />
     </>
   );
 }
