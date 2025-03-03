@@ -105,8 +105,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       session,
       user: {
         ...user,
-        created_at: JSON.stringify(user?.created_at),
-        updated_at: JSON.stringify(user?.updated_at),
+        createdAt: user.createdAt.toISOString(),
+        updatedAt: user.updatedAt.toISOString(),
       },
     },
   };

@@ -30,7 +30,7 @@ export default async function handler(
         },
       },
       where: {
-        created_at: {
+        createdAt: {
           gte: startOfDay(startDay),
           lte: endOfDay(endDay),
         },

@@ -27,9 +27,9 @@ export const authOptions: NextAuthOptions = {
       const newUser = await prisma.user.create({
         data: {
           email: user.email!,
-          discord_id: user.id,
-          discord_nickname: user.name!,
-          avatar_url: user.image || "",
+          discordId: user.id,
+          discordNickname: user.name!,
+          avatarUrl: user.image || "",
           team: { connect: Prisma.skip },
         },
       });
