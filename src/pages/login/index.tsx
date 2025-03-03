@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
 
   // if (status === "authenticated") {
   //   return <p>Fulano tu tá onlini {session.user?.name}</p>;

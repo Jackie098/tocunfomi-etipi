@@ -1,4 +1,5 @@
-import { Team, TeamType } from "@/models/team";
+import { TeamType } from "@/models/team";
+import { Team } from "@prisma/client";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
