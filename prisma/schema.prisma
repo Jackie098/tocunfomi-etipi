@@ -1,3 +1,4 @@
+// FIXME: Add mapper camelCase forEach attr in snake_case
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["strictUndefinedChecks"]
@@ -12,46 +13,46 @@ model Team {
   id          String   @id @default(cuid())
   description TeamType
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   User User[]
 }
 
 model User {
-  id               String  @id @default(cuid())
-  discord_id       String  @unique
-  discord_nickname String  @unique
-  name             String?
-  email            String  @unique
+  id              String  @id @default(cuid())
+  discordId       String  @unique @map("discord_id")
+  discordNickname String  @unique @map("discord_nickname")
+  name            String?
+  email           String  @unique
 
-  avatar_url String?
+  avatarUrl String? @map("avatar_url")
 
-  is_validated       Boolean @default(false)
-  is_email_validated Boolean @default(false)
+  isValidated      Boolean @default(false) @map("is_validated")
+  isEmailValidated Boolean @default(false) @map("is_email_validated")
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  team    Team?   @relation(fields: [team_id], references: [id], onDelete: NoAction, onUpdate: Cascade)
-  team_id String?
+  team   Team?   @relation(fields: [teamId], references: [id], onDelete: NoAction, onUpdate: Cascade)
+  teamId String? @map("team_id")
 
-  lunch_time LunchTime[]
+  lunchTime LunchTime[]
 }
 
 model LunchTime {
   id String @id @default(cuid())
 
-  go_lunch     Boolean   @default(true)
-  date_leaving DateTime?
-  date_arrived DateTime?
+  goLunch     Boolean   @default(true) @map("go_lunch")
+  dateLeaving DateTime? @map("date_leaving")
+  dateArrived DateTime? @map("date_arrived")
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user_id String
+  userId String @map("user_id")
 
-  user User @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 enum TeamType {
