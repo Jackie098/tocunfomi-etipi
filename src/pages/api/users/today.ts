@@ -21,22 +21,22 @@ export default async function handler(
 
     const allMarkedLunches = await prisma.user.findMany({
       include: {
-        lunch_time: {
+        lunchTime: {
           where: {
-            created_at: {
+            createdAt: {
               gte: startOfDay(startDay),
               lte: endOfDay(endDay),
             },
           },
           omit: {
-            user_id: true,
+            userId: true,
           },
         },
       },
       omit: {
-        discord_id: true,
-        is_email_validated: true,
-        updated_at: true,
+        discordId: true,
+        isEmailValidated: true,
+        updatedAt: true,
       },
     });
 

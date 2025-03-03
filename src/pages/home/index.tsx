@@ -1,4 +1,4 @@
-import { FormFirstAccess } from "@/components/pages/home/form-first-access";
+import { DialogFormFirstAccess } from "@/components/pages/home/dialog-form-first-access";
 import { Button } from "@/components/ui/button";
 import { User } from "@/models/user";
 import { GetServerSideProps } from "next";
@@ -47,26 +47,17 @@ export default function Home({ session, user }: Props) {
 
   console.log("🚀 ~ LoginPage ~ session, status:", session, session.user.email);
 
-  if (!hasUserTeam) {
-    return (
-      <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-col w-[400px]">
-          <FormFirstAccess />
-        </div>
-        <Button onClick={() => signOut({ callbackUrl: "/login" })}>
-          Deslogar
-        </Button>
-      </div>
-    );
-  }
-
   return (
     <>
       <div>Home</div>;
       <Button onClick={() => signOut({ callbackUrl: "/login" })}>
         Deslogar
       </Button>
-      <DialogLunchToday userId={user.id} open={!currentUserHasMarkedToday} />
+      <DialogFormFirstAccess open={!hasUserTeam} />
+      <DialogLunchToday
+        userId={user.id}
+        open={!currentUserHasMarkedToday && hasUserTeam}
+      />
     </>
   );
 }

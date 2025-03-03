@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -20,10 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFetchTeams } from "@/hooks/fetches/teams/use-fetch-teams";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SelectTeamItems } from "./select-team-items";
-import { Card, CardContent } from "@/components/ui/card";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -34,7 +34,14 @@ const formSchema = z.object({
   }),
 });
 
-export function FormFirstAccess() {
+type Props = {
+  open: boolean;
+};
+
+export function DialogFormFirstAccess({ open }: Props) {
+  const [isGenericLoading, setGenericIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(open);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,7 +52,7 @@ export function FormFirstAccess() {
 
   const { teams, isFetchingTeams, teamsError } = useFetchTeams({});
 
-  const isLoading = isFetchingTeams;
+  const isLoading = isFetchingTeams || isGenericLoading;
 
   useEffect(() => {
     if (teamsError) {
@@ -55,6 +62,7 @@ export function FormFirstAccess() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    setGenericIsLoading(true);
 
     fetch("/api/users", {
       method: "PATCH",
@@ -66,6 +74,8 @@ export function FormFirstAccess() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        setGenericIsLoading(false);
+        setIsOpen(false);
       })
       .catch((err) => {
         console.log(err);
@@ -73,8 +83,9 @@ export function FormFirstAccess() {
   }
 
   return (
-    <Card>
-      <CardContent>
+    <Dialog open={isOpen} onOpenChange={setIsOpen} modal={true}>
+      <DialogContent>
+        <DialogTitle>Qual é o teu time?</DialogTitle>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -111,12 +122,6 @@ export function FormFirstAccess() {
                         <SelectValue placeholder="Selecione o seu time" />
                       </SelectTrigger>
                       <SelectContent ref={field.ref}>
-                        {/* {teams &&
-                      teams.data!.map((team) => (
-                        <SelectItem key={team.id} value={team.id.toString()}>
-                          {team.description.toLowerCase()}
-                        </SelectItem>
-                      ))} */}
                         <SelectTeamItems data={teams?.data} />
                       </SelectContent>
                     </Select>
@@ -130,7 +135,7 @@ export function FormFirstAccess() {
             </Button>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }
