@@ -25,6 +25,7 @@ export default function Home({ session, user }: Props) {
     (lunch) => lunch.user.email === session.user?.email
   );
 
+  // CHECKPOINT: Display skeleton if user doesnt have a team yet, otherwise, show marked lunch for today below of the modal asking if usar will be lunching today
   useEffect(() => {
     console.log("🚀 ~ Home ~ user:", user);
     fetch("/api/lunch-time/today")
